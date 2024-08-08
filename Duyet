@@ -1,0 +1,30 @@
+Run('C:/Users/Jack_Hoang/Desktop/MultiTest_Sample/build/MultiTest.exe')
+WinWaitActive('Scenario Select')
+Sleep(2000)
+ControlClick('Scenario Select', "", "Off-line")
+WinWaitActive("Station_Test testing tool  1.0.0.6")
+Sleep(2000)
+$visibletext = ControlGetText("Station_Test testing tool  1.0.0.6", "", "WindowsForms10.EDIT.app.0.141b42a_r8_ad14")
+Sleep(2000)
+ControlClick("Station_Test testing tool  1.0.0.6", "", "Start")
+$count = 1
+
+While $visibletext <> "PASS" And $count < 4
+    $visibletext = ControlGetText("Station_Test testing tool  1.0.0.6", "", "WindowsForms10.EDIT.app.0.141b42a_r8_ad14")
+    If $visibletext == "Running" Then
+        Sleep(10000)
+        ConsoleWrite("Running" & @CRLF)
+    ElseIf $visibletext == "WIEOTR" Or $visibletext == "Fail" Then
+        If $count > 3 Then
+            WinClose("Station_Test testing tool  1.0.0.6")
+            ExitLoop
+        EndIf
+        ConsoleWrite("Fail lần " & $count & @CRLF)
+        ControlClick("Station_Test testing tool  1.0.0.6", "", "Start")
+        $count = $count + 1
+    ElseIf $visibletext == "Pass" Then
+        WinClose("Station_Test testing tool  1.0.0.6")
+        ConsoleWrite("Pass" & @CRLF)
+        ExitLoop
+    EndIf
+WEnd
